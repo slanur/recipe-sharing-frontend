@@ -7,6 +7,11 @@ export interface ApiAuthTokens {
   refreshToken: string
 }
 
+export interface ApiRefreshResponse {
+  accessToken: string
+  refreshToken?: string
+}
+
 export interface ApiOrganization {
   id: string
   name: string
