@@ -7,6 +7,8 @@ Kullanıcıların tarif paylaşıp keşfettiği, Organization ve User olmak üze
 - React ve TypeScript
 - Vite
 - Tailwind CSS
+- Axios
+- Zustand
 - oxlint
 
 ## Kurulum
