@@ -1,8 +1,11 @@
+import { Mail } from 'lucide-react'
 import { useState, type FormEvent } from 'react'
 import { login } from '@/api/auth.api'
 import { Alert } from '@/components/ui/Alert'
 import { Button } from '@/components/ui/Button'
+import { PasswordField } from '@/components/ui/PasswordField'
 import { TextField } from '@/components/ui/TextField'
+import { DemoAccounts } from '@/features/auth/DemoAccounts'
 import { validateEmail } from '@/features/auth/validation'
 import { useAuthStore } from '@/stores/authStore'
 import { getErrorMessage } from '@/utils/apiError'
@@ -39,27 +42,36 @@ export function LoginForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="space-y-4">
+    <form onSubmit={handleSubmit} noValidate className="space-y-5">
       {formError && <Alert tone="error">{formError}</Alert>}
       <TextField
         label="E-posta"
         type="email"
+        icon={Mail}
+        placeholder="ornek@eposta.com"
         autoComplete="email"
         value={email}
         onChange={(event) => setEmail(event.target.value)}
         error={fieldErrors.email}
       />
-      <TextField
+      <PasswordField
         label="Şifre"
-        type="password"
         autoComplete="current-password"
         value={password}
         onChange={(event) => setPassword(event.target.value)}
         error={fieldErrors.password}
       />
-      <Button type="submit" isLoading={isSubmitting} className="w-full">
+      <Button type="submit" size="lg" isLoading={isSubmitting} className="w-full">
         Giriş Yap
       </Button>
+      {import.meta.env.DEV && import.meta.env.VITE_USE_MOCKS === 'true' && (
+        <DemoAccounts
+          onSelect={(demoEmail, demoPassword) => {
+            setEmail(demoEmail)
+            setPassword(demoPassword)
+          }}
+        />
+      )}
     </form>
   )
 }

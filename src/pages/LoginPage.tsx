@@ -7,17 +7,23 @@ export function LoginPage() {
   const location = useLocation()
 
   return (
-    <AuthCard title="Giriş Yap" description="Hesabınıza giriş yapın.">
+    <AuthCard
+      title="Tekrar hoş geldin"
+      description="Tarif defterine kaldığın yerden devam et."
+    >
       {location.state?.registered && (
-        <div className="mb-4">
+        <div className="mb-5">
           <Alert tone="success">Kaydınız tamamlandı. Giriş yapabilirsiniz.</Alert>
         </div>
       )}
       <LoginForm />
-      <p className="mt-4 text-center text-sm text-stone-600">
+      <p className="mt-6 text-center text-sm text-ink-soft">
         Hesabınız yok mu?{' '}
-        <Link to="/register" className="font-medium text-orange-700">
-          Kayıt olun
+        <Link
+          to="/register"
+          className="font-semibold text-brand-600 hover:text-brand-700"
+        >
+          Ücretsiz kayıt olun
         </Link>
       </p>
     </AuthCard>

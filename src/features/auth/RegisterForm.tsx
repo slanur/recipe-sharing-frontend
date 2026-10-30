@@ -1,9 +1,11 @@
+import { Building2, ChefHat, Mail, type LucideIcon } from 'lucide-react'
 import { useEffect, useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { register, registerOrganization } from '@/api/auth.api'
 import { getOrganizations } from '@/api/organizations.api'
 import { Alert } from '@/components/ui/Alert'
 import { Button } from '@/components/ui/Button'
+import { PasswordField } from '@/components/ui/PasswordField'
 import { SelectField } from '@/components/ui/SelectField'
 import { TextField } from '@/components/ui/TextField'
 import { validateEmail, validatePassword } from '@/features/auth/validation'
@@ -11,9 +13,24 @@ import type { ApiOrganization } from '@/types/api'
 import type { Role } from '@/types/auth'
 import { getErrorMessage } from '@/utils/apiError'
 
-const ROLE_OPTIONS: { value: Role; label: string }[] = [
-  { value: 'User', label: 'Kullanıcı' },
-  { value: 'Organization', label: 'Organization' },
+const ROLE_OPTIONS: {
+  value: Role
+  label: string
+  description: string
+  icon: LucideIcon
+}[] = [
+  {
+    value: 'User',
+    label: 'Kullanıcı',
+    description: 'Tarif paylaş ve keşfet',
+    icon: ChefHat,
+  },
+  {
+    value: 'Organization',
+    label: 'Organization',
+    description: 'Kategorileri yönet',
+    icon: Building2,
+  },
 ]
 
 export function RegisterForm() {
@@ -75,27 +92,31 @@ export function RegisterForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="space-y-4">
+    <form onSubmit={handleSubmit} noValidate className="space-y-5">
       {formError && <Alert tone="error">{formError}</Alert>}
       <fieldset>
-        <legend className="text-sm font-medium text-stone-800">
+        <legend className="mb-1.5 text-sm font-semibold text-ink">
           Hesap türü
         </legend>
-        <div className="mt-2 grid grid-cols-2 gap-2">
-          {ROLE_OPTIONS.map((option) => (
+        <div className="grid grid-cols-2 gap-2.5">
+          {ROLE_OPTIONS.map(({ value, label, description, icon: Icon }) => (
             <label
-              key={option.value}
-              className="flex cursor-pointer items-center gap-2 rounded-lg border border-stone-300 px-3 py-2 text-sm text-stone-800 has-checked:border-orange-700 has-checked:bg-orange-50"
+              key={value}
+              className="cursor-pointer rounded-2xl border border-sand-300 bg-white p-3.5 transition-colors hover:border-ink-muted has-checked:border-brand-600 has-checked:bg-brand-50 has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-brand-600"
             >
               <input
                 type="radio"
                 name="role"
-                value={option.value}
-                checked={role === option.value}
-                onChange={() => setRole(option.value)}
-                className="accent-orange-700"
+                value={value}
+                checked={role === value}
+                onChange={() => setRole(value)}
+                className="sr-only"
               />
-              {option.label}
+              <Icon aria-hidden="true" className="h-5 w-5 text-brand-600" />
+              <span className="mt-2 block text-sm font-semibold text-ink">
+                {label}
+              </span>
+              <span className="block text-xs text-ink-soft">{description}</span>
             </label>
           ))}
         </div>
@@ -103,14 +124,16 @@ export function RegisterForm() {
       <TextField
         label="E-posta"
         type="email"
+        icon={Mail}
+        placeholder="ornek@eposta.com"
         autoComplete="email"
         value={email}
         onChange={(event) => setEmail(event.target.value)}
         error={fieldErrors.email}
       />
-      <TextField
+      <PasswordField
         label="Şifre"
-        type="password"
+        placeholder="En az 8 karakter"
         autoComplete="new-password"
         value={password}
         onChange={(event) => setPassword(event.target.value)}
@@ -132,8 +155,8 @@ export function RegisterForm() {
           </option>
         ))}
       </SelectField>
-      <Button type="submit" isLoading={isSubmitting} className="w-full">
-        Kayıt Ol
+      <Button type="submit" size="lg" isLoading={isSubmitting} className="w-full">
+        Hesabımı Oluştur
       </Button>
     </form>
   )
