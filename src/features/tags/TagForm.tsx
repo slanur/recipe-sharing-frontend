@@ -4,6 +4,7 @@ import { TextField } from '@/components/ui/TextField'
 
 interface TagFormProps {
   label: string
+  placeholder?: string
   submitLabel: string
   initialName?: string
   existingNames: string[]
@@ -13,6 +14,7 @@ interface TagFormProps {
 
 export function TagForm({
   label,
+  placeholder,
   submitLabel,
   initialName = '',
   existingNames,
@@ -55,22 +57,24 @@ export function TagForm({
     <form
       onSubmit={handleSubmit}
       noValidate
-      className="flex flex-col gap-2 sm:flex-row sm:items-start"
+      className="flex flex-col gap-2.5 sm:flex-row sm:items-start"
     >
       <div className="flex-1">
         <TextField
           label={label}
+          hideLabel
+          placeholder={placeholder}
           value={name}
           onChange={(event) => setName(event.target.value)}
           error={error}
         />
       </div>
-      <div className="flex gap-2 sm:mt-6">
-        <Button type="submit" isLoading={isSubmitting}>
+      <div className="flex gap-2">
+        <Button type="submit" isLoading={isSubmitting} className="h-12">
           {submitLabel}
         </Button>
         {onCancel && (
-          <Button variant="secondary" onClick={onCancel}>
+          <Button variant="ghost" onClick={onCancel} className="h-12">
             Vazgeç
           </Button>
         )}

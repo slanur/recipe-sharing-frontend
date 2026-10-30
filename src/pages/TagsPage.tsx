@@ -1,26 +1,38 @@
+import { CloudOff, Pencil, Tags, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { Alert } from '@/components/ui/Alert'
 import { Button } from '@/components/ui/Button'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
+import { PageHeader } from '@/components/ui/PageHeader'
 import { Spinner } from '@/components/ui/Spinner'
 import { StateMessage } from '@/components/ui/StateMessage'
 import { TagForm } from '@/features/tags/TagForm'
 import { useTags } from '@/features/tags/useTags'
+import { useToastStore } from '@/stores/toastStore'
 import type { Tag } from '@/types/recipe'
 import { getErrorMessage } from '@/utils/apiError'
+
+const iconButtonClass =
+  'flex h-9 w-9 items-center justify-center rounded-lg text-ink-muted transition-colors'
 
 export function TagsPage() {
   const { tags, isLoading, error, reload, addTag, renameTag, removeTag } =
     useTags()
+  const showToast = useToastStore((state) => state.showToast)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [tagToDelete, setTagToDelete] = useState<Tag | null>(null)
   const [isDeleting, setIsDeleting] = useState(false)
   const [actionError, setActionError] = useState('')
 
-  async function runAction(action: () => Promise<void>, fallback: string) {
+  async function runAction(
+    action: () => Promise<void>,
+    successMessage: string,
+    fallback: string,
+  ) {
     setActionError('')
     try {
       await action()
+      showToast(successMessage)
     } catch (failure) {
       setActionError(getErrorMessage(failure, fallback))
     }
@@ -29,7 +41,11 @@ export function TagsPage() {
   async function handleDelete() {
     if (!tagToDelete) return
     setIsDeleting(true)
-    await runAction(() => removeTag(tagToDelete.id), 'Tag silinemedi')
+    await runAction(
+      () => removeTag(tagToDelete.id),
+      'Tag silindi',
+      'Tag silinemedi',
+    )
     setIsDeleting(false)
     setTagToDelete(null)
   }
@@ -38,15 +54,21 @@ export function TagsPage() {
     tags.filter((tag) => tag.id !== id).map((tag) => tag.name)
 
   return (
-    <section className="space-y-6">
-      <h1 className="text-2xl font-semibold text-stone-950">Tag Yönetimi</h1>
+    <section className="mx-auto max-w-3xl space-y-7">
+      <PageHeader
+        title="Tag Yönetimi"
+        description="Tarifleri düzenli tutan kategorileri buradan yönet."
+      />
 
-      <div className="rounded-2xl border border-stone-200 bg-white p-4 sm:p-5">
+      <div className="rounded-3xl bg-white p-4 shadow-card sm:p-5">
         <TagForm
           label="Yeni tag"
-          submitLabel="Ekle"
+          placeholder="Yeni tag adı, örn. Kahvaltı"
+          submitLabel="Tag Ekle"
           existingNames={namesExcept()}
-          onSubmit={(name) => runAction(() => addTag(name), 'Tag eklenemedi')}
+          onSubmit={(name) =>
+            runAction(() => addTag(name), 'Tag eklendi', 'Tag eklenemedi')
+          }
         />
       </div>
 
@@ -56,6 +78,7 @@ export function TagsPage() {
 
       {!isLoading && error && (
         <StateMessage
+          icon={CloudOff}
           title={error}
           action={
             <Button variant="secondary" onClick={reload}>
@@ -67,15 +90,16 @@ export function TagsPage() {
 
       {!isLoading && !error && tags.length === 0 && (
         <StateMessage
+          icon={Tags}
           title="Henüz tag yok"
-          description="İlk tag'i yukarıdaki formdan ekleyebilirsiniz."
+          description="İlk tag'i yukarıdaki formdan ekleyebilirsin."
         />
       )}
 
       {!isLoading && !error && tags.length > 0 && (
-        <ul className="divide-y divide-stone-200 rounded-2xl border border-stone-200 bg-white">
+        <ul className="divide-y divide-sand-200 overflow-hidden rounded-3xl bg-white shadow-card">
           {tags.map((tag) => (
-            <li key={tag.id} className="p-4">
+            <li key={tag.id} className="px-4 py-3 sm:px-5">
               {editingId === tag.id ? (
                 <TagForm
                   label="Tag adı"
@@ -84,28 +108,41 @@ export function TagsPage() {
                   existingNames={namesExcept(tag.id)}
                   onCancel={() => setEditingId(null)}
                   onSubmit={(name) =>
-                    runAction(async () => {
-                      await renameTag(tag.id, name)
-                      setEditingId(null)
-                    }, 'Tag güncellenemedi')
+                    runAction(
+                      async () => {
+                        await renameTag(tag.id, name)
+                        setEditingId(null)
+                      },
+                      'Tag güncellendi',
+                      'Tag güncellenemedi',
+                    )
                   }
                 />
               ) : (
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <span className="font-medium text-stone-950">{tag.name}</span>
-                  <div className="flex gap-2">
-                    <Button
-                      variant="secondary"
+                <div className="flex items-center justify-between gap-3">
+                  <span className="flex min-w-0 items-center gap-3 font-semibold text-ink">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-600">
+                      <Tags aria-hidden="true" className="h-4 w-4" />
+                    </span>
+                    <span className="truncate">{tag.name}</span>
+                  </span>
+                  <div className="flex shrink-0 gap-1">
+                    <button
+                      type="button"
                       onClick={() => setEditingId(tag.id)}
+                      aria-label={`${tag.name} tag'ini düzenle`}
+                      className={`${iconButtonClass} hover:bg-sand-100 hover:text-ink`}
                     >
-                      Düzenle
-                    </Button>
-                    <Button
-                      variant="danger"
+                      <Pencil aria-hidden="true" className="h-4 w-4" />
+                    </button>
+                    <button
+                      type="button"
                       onClick={() => setTagToDelete(tag)}
+                      aria-label={`${tag.name} tag'ini sil`}
+                      className={`${iconButtonClass} hover:bg-red-50 hover:text-red-700`}
                     >
-                      Sil
-                    </Button>
+                      <Trash2 aria-hidden="true" className="h-4 w-4" />
+                    </button>
                   </div>
                 </div>
               )}

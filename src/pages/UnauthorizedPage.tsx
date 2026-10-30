@@ -1,15 +1,23 @@
+import { Lock } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { buttonClass } from '@/components/ui/buttonStyles'
+import { StateMessage } from '@/components/ui/StateMessage'
 
 export function UnauthorizedPage() {
   return (
-    <section className="mx-auto max-w-md px-4 py-16 text-center">
-      <h1 className="text-2xl font-semibold text-stone-950">Yetkisiz Erişim</h1>
-      <p className="mt-2 text-stone-600">
-        Bu sayfayı görüntülemek için yetkiniz yok.
-      </p>
-      <Link to="/" className="mt-6 inline-block font-medium text-orange-700">
-        Ana sayfaya dön
-      </Link>
+    <section className="mx-auto max-w-lg px-4 py-20">
+      <title>Yetkisiz Erişim · Sofra</title>
+      <h1 className="sr-only">Yetkisiz Erişim</h1>
+      <StateMessage
+        icon={Lock}
+        title="Bu sayfa sana kapalı"
+        description="Bu sayfayı görüntülemek için yetkiniz yok."
+        action={
+          <Link to="/" className={buttonClass('secondary')}>
+            Ana Sayfaya Dön
+          </Link>
+        }
+      />
     </section>
   )
 }

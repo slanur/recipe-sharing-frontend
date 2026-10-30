@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import type { RecipeSort } from '@/types/recipe'
 
-export const RECIPES_PER_PAGE = 8
+export const RECIPES_PER_PAGE = 9
 
 function parsePage(value: string | null) {
   const page = Number(value)

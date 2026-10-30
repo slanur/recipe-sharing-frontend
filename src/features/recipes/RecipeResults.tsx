@@ -1,12 +1,11 @@
-import { useEffect } from 'react'
+import { CloudOff } from 'lucide-react'
+import { useEffect, type ReactNode } from 'react'
 import { Button } from '@/components/ui/Button'
 import { Pagination } from '@/components/ui/Pagination'
-import { Spinner } from '@/components/ui/Spinner'
 import { StateMessage } from '@/components/ui/StateMessage'
-import { RecipeCard } from '@/features/recipes/RecipeCard'
 import type { Recipe } from '@/types/recipe'
 
-interface RecipeGridProps {
+interface RecipeResultsProps {
   recipes: Recipe[]
   page: number
   totalPages: number
@@ -14,12 +13,13 @@ interface RecipeGridProps {
   error: string
   emptyTitle: string
   emptyDescription?: string
-  showDescription?: boolean
+  skeleton: ReactNode
   onRetry: () => void
   onPageChange: (page: number) => void
+  children: ReactNode
 }
 
-export function RecipeGrid({
+export function RecipeResults({
   recipes,
   page,
   totalPages,
@@ -27,21 +27,23 @@ export function RecipeGrid({
   error,
   emptyTitle,
   emptyDescription,
-  showDescription,
+  skeleton,
   onRetry,
   onPageChange,
-}: RecipeGridProps) {
+  children,
+}: RecipeResultsProps) {
   const isPastLastPage = !isLoading && !error && page > totalPages
 
   useEffect(() => {
     if (isPastLastPage) onPageChange(totalPages)
   }, [isPastLastPage, totalPages, onPageChange])
 
-  if (isLoading || isPastLastPage) return <Spinner />
+  if (isLoading || isPastLastPage) return skeleton
 
   if (error) {
     return (
       <StateMessage
+        icon={CloudOff}
         title={error}
         action={
           <Button variant="secondary" onClick={onRetry}>
@@ -57,14 +59,8 @@ export function RecipeGrid({
   }
 
   return (
-    <div className="space-y-6">
-      <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {recipes.map((recipe) => (
-          <li key={recipe.id}>
-            <RecipeCard recipe={recipe} showDescription={showDescription} />
-          </li>
-        ))}
-      </ul>
+    <div className="space-y-8">
+      {children}
       <Pagination
         page={page}
         totalPages={totalPages}

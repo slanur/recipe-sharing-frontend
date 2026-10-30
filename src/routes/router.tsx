@@ -1,4 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom'
+import { AuthLayout } from '@/layouts/AuthLayout'
 import { PanelLayout } from '@/layouts/PanelLayout'
 import { PublicLayout } from '@/layouts/PublicLayout'
 import { AboutPage } from '@/pages/AboutPage'
@@ -24,14 +25,19 @@ export const router = createBrowserRouter([
       { path: '/', element: <LandingPage /> },
       { path: '/about', element: <AboutPage /> },
       { path: '/unauthorized', element: <UnauthorizedPage /> },
+      { path: '*', element: <NotFoundPage /> },
+    ],
+  },
+  {
+    element: <GuestRoute />,
+    children: [
       {
-        element: <GuestRoute />,
+        element: <AuthLayout />,
         children: [
           { path: '/login', element: <LoginPage /> },
           { path: '/register', element: <RegisterPage /> },
         ],
       },
-      { path: '*', element: <NotFoundPage /> },
     ],
   },
   {
