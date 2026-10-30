@@ -1,8 +1,10 @@
 import { createBrowserRouter } from 'react-router-dom'
 import { PanelLayout } from '@/layouts/PanelLayout'
 import { PublicLayout } from '@/layouts/PublicLayout'
+import { LoginPage } from '@/pages/LoginPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import { PlaceholderPage } from '@/pages/PlaceholderPage'
+import { RegisterPage } from '@/pages/RegisterPage'
 import { UnauthorizedPage } from '@/pages/UnauthorizedPage'
 import { GuestRoute } from '@/routes/GuestRoute'
 import { PrivateRoute } from '@/routes/PrivateRoute'
@@ -18,8 +20,8 @@ export const router = createBrowserRouter([
       {
         element: <GuestRoute />,
         children: [
-          { path: '/login', element: <PlaceholderPage title="Giriş Yap" /> },
-          { path: '/register', element: <PlaceholderPage title="Kayıt Ol" /> },
+          { path: '/login', element: <LoginPage /> },
+          { path: '/register', element: <RegisterPage /> },
         ],
       },
       { path: '*', element: <NotFoundPage /> },
