@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { AuthTokens } from '@/types/auth'
-import { getRole, getUserId } from '@/utils/jwt'
+import { getRole, getUserId, isReadableToken } from '@/utils/jwt'
 
 interface AuthState {
   accessToken: string | null
@@ -24,7 +24,9 @@ export const useAuthStore = create<AuthState>()(
 )
 
 export const selectIsAuthenticated = (state: AuthState) =>
-  state.refreshToken !== null
+  state.accessToken !== null &&
+  state.refreshToken !== null &&
+  isReadableToken(state.accessToken)
 
 export const selectRole = (state: AuthState) =>
   state.accessToken ? getRole(state.accessToken) : null

@@ -9,19 +9,23 @@ const ROLE_BY_CLAIM: Record<string, Role> = {
   'Organization User': 'Organization',
 }
 
-export function getRole(accessToken: string): Role | null {
+function readClaims(accessToken: string) {
   try {
-    const { role } = jwtDecode<{ role?: string }>(accessToken)
-    return (role && ROLE_BY_CLAIM[role]) || null
+    return jwtDecode<{ role?: string; sub?: string }>(accessToken)
   } catch {
     return null
   }
 }
 
+export function isReadableToken(accessToken: string) {
+  return readClaims(accessToken) !== null
+}
+
+export function getRole(accessToken: string): Role | null {
+  const role = readClaims(accessToken)?.role
+  return (role && ROLE_BY_CLAIM[role]) || null
+}
+
 export function getUserId(accessToken: string) {
-  try {
-    return jwtDecode<{ sub?: string }>(accessToken).sub ?? null
-  } catch {
-    return null
-  }
+  return readClaims(accessToken)?.sub ?? null
 }
