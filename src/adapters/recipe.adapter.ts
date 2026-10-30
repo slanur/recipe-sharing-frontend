@@ -12,7 +12,7 @@ import type {
   RecipeSort,
 } from '@/types/recipe'
 
-// Postman'de yalnızca `a-z` belgeli; bu değerler doğrulanmalı.
+// Postman'de yalnızca `a-z` belgeli. Bu değerler ve `tagId` filtresi varsayımdır.
 const SORT_VALUES: Record<RecipeSort, string> = {
   newest: 'newest',
   oldest: 'oldest',
@@ -26,6 +26,7 @@ export function toRecipe(item: ApiItem): Recipe {
     prepTimeMinutes: item.value,
     tags: item.tags,
     images: item.photos ?? [],
+    ownerId: item.ownerId ?? null,
   }
 }
 
@@ -50,6 +51,7 @@ export function toItemQuery(query: RecipeQuery): ApiItemQuery {
   return {
     sort: query.sort && SORT_VALUES[query.sort],
     searchTerm: query.search || undefined,
+    tagId: query.tagId || undefined,
     page: query.page,
     limit: query.limit,
   }
