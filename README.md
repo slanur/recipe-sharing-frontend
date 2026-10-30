@@ -1,6 +1,6 @@
-# Recipe Sharing App
+# Sofra
 
-Kullanıcıların tarif paylaşıp keşfettiği, Organization ve User olmak üzere iki ayrı paneli olan React uygulaması.
+Ev yemeği tariflerini paylaşmak ve keşfetmek için geliştirilmiş, Organization ve User olmak üzere iki ayrı paneli olan React uygulaması (Recipe Sharing App).
 
 ## Özellikler
 
@@ -9,7 +9,8 @@ Kullanıcıların tarif paylaşıp keşfettiği, Organization ve User olmak üze
 - Landing, About, Login ve Register sayfaları
 - **User paneli:** arama, kategori filtresi, sıralama ve sayfalamalı tarif listesi; tarif ekleme, güncelleme, silme; görsel ekleme ve silme
 - **Organization paneli:** tarif listesi ve tag yönetimi
-- Tüm ekranlarda responsive tasarım
+- Tüm ekranlarda responsive tasarım, mobilde alt sekme gezintisi
+- Kendine ait tasarım sistemi: marka kimliği, tipografi, renk paleti, bildirimler ve yükleme iskeletleri
 
 ## Kullanılan Teknolojiler
 
@@ -19,6 +20,8 @@ Kullanıcıların tarif paylaşıp keşfettiği, Organization ve User olmak üze
 - Tailwind CSS
 - Axios
 - Zustand
+- Lucide (ikonlar)
+- Fraunces ve DM Sans (yazı tipleri)
 - Mock Service Worker (geliştirme ortamı için sahte API)
 - oxlint
 
@@ -38,14 +41,16 @@ Uygulama varsayılan olarak `http://localhost:5173` adresinde açılır.
 
 ## Demo Hesapları
 
-Bu hesaplar yalnızca sahte API'de (`VITE_USE_MOCKS=true`) çalışır.
+Bu hesaplar yalnızca sahte API'de (`VITE_USE_MOCKS=true`) çalışır. Geliştirme ortamında giriş ekranındaki demo butonlarıyla tek tıkla doldurulabilir.
 
 | Rol          | E-posta            | Şifre      |
 | ------------ | ------------------ | ---------- |
 | User         | `user@example.com` | `demo1234` |
 | Organization | `org@example.com`  | `demo1234` |
 
-Sahte API verileri tarayıcıda saklanır. Başlangıç verilerine dönmek için tarayıcıdaki `mock-db` kaydını silin.
+Sahte API verileri tarayıcıda saklanır. Başlangıç verilerine dönmek için tarayıcıdaki `mock-db-v2` kaydını silin.
+
+Yemek fotoğrafları [Unsplash](https://unsplash.com/license) üzerinden yüklenir, bu nedenle görseller için internet bağlantısı gerekir.
 
 ## Ortam Değişkenleri
 
@@ -70,7 +75,7 @@ src/
 ├── adapters/       API modeli ile uygulama modeli arasındaki dönüşüm
 ├── api/            Axios istemcisi, interceptor'lar ve endpoint fonksiyonları
 ├── components/ui/  Tekrar kullanılan arayüz bileşenleri
-├── features/       auth, recipes ve tags özellikleri
+├── features/       auth, landing, recipes ve tags özellikleri
 ├── layouts/        Sayfa düzenleri
 ├── mocks/          Geliştirme ortamı için sahte API
 ├── pages/          Route başına sayfalar
