@@ -46,3 +46,8 @@ export async function addRecipeImage(recipeId: string, file: File) {
   formData.append('itemId', recipeId)
   await apiClient.post('/items/add-item-photo', formData)
 }
+
+// Postman'de görsel silme endpoint'i yok; bu yol varsayımdır ve sadece sahte API'de çalışır.
+export async function deleteRecipeImage(recipeId: string, imageId: string) {
+  await apiClient.delete(`/items/delete-item-photo/${recipeId}/${imageId}`)
+}

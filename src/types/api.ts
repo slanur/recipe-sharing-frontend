@@ -22,13 +22,19 @@ export interface ApiTag {
   name: string
 }
 
+export interface ApiPhoto {
+  id: string
+  url: string
+}
+
 export interface ApiItem {
   id: string
   name: string
   description: string
   value: number
   tags: ApiTag[]
-  photos?: string[]
+  photos?: ApiPhoto[]
+  ownerId?: string
 }
 
 export interface ApiItemPage {
@@ -47,6 +53,7 @@ export interface ApiItemPayload {
 export interface ApiItemQuery {
   sort?: string
   searchTerm?: string
+  tagId?: string
   page?: number
   limit?: number
 }

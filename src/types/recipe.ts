@@ -3,13 +3,19 @@ export interface Tag {
   name: string
 }
 
+export interface RecipeImage {
+  id: string
+  url: string
+}
+
 export interface Recipe {
   id: string
   title: string
   description: string
   prepTimeMinutes: number
   tags: Tag[]
-  images: string[]
+  images: RecipeImage[]
+  ownerId: string | null
 }
 
 export interface RecipeInput {
@@ -30,6 +36,7 @@ export type RecipeSort = 'newest' | 'oldest'
 export interface RecipeQuery {
   sort?: RecipeSort
   search?: string
+  tagId?: string
   page?: number
   limit?: number
 }
