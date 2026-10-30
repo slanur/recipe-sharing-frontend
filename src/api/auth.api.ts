@@ -1,6 +1,7 @@
 import { apiClient } from '@/api/client'
 import type {
   ApiAuthTokens,
+  ApiRefreshResponse,
   LoginPayload,
   RegisterPayload,
 } from '@/types/api'
@@ -19,7 +20,7 @@ export async function registerOrganization(payload: RegisterPayload) {
 }
 
 export async function refreshTokens(refreshToken: string) {
-  const { data } = await apiClient.post<ApiAuthTokens>('/auth/refresh', {
+  const { data } = await apiClient.post<ApiRefreshResponse>('/auth/refresh', {
     refreshToken,
   })
   return data
