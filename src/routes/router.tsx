@@ -5,10 +5,12 @@ import { AboutPage } from '@/pages/AboutPage'
 import { LandingPage } from '@/pages/LandingPage'
 import { LoginPage } from '@/pages/LoginPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
+import { OrgRecipesPage } from '@/pages/OrgRecipesPage'
 import { PlaceholderPage } from '@/pages/PlaceholderPage'
 import { RegisterPage } from '@/pages/RegisterPage'
 import { TagsPage } from '@/pages/TagsPage'
 import { UnauthorizedPage } from '@/pages/UnauthorizedPage'
+import { UserRecipesPage } from '@/pages/UserRecipesPage'
 import { GuestRoute } from '@/routes/GuestRoute'
 import { PrivateRoute } from '@/routes/PrivateRoute'
 import { RoleRoute } from '@/routes/RoleRoute'
@@ -45,7 +47,7 @@ export const router = createBrowserRouter([
             children: [
               {
                 path: '/user/recipes',
-                element: <PlaceholderPage title="Tarifler" />,
+                element: <UserRecipesPage />,
               },
               {
                 path: '/user/recipes/new',
@@ -62,7 +64,7 @@ export const router = createBrowserRouter([
             children: [
               {
                 path: '/org/recipes',
-                element: <PlaceholderPage title="Organization Tarifleri" />,
+                element: <OrgRecipesPage />,
               },
               {
                 path: '/org/tags',
