@@ -1,7 +1,12 @@
+import { LoaderCircle } from 'lucide-react'
+
 export function Spinner() {
   return (
-    <div role="status" className="flex justify-center py-12">
-      <span className="h-8 w-8 animate-spin rounded-full border-4 border-stone-200 border-t-orange-700" />
+    <div role="status" className="flex justify-center py-16">
+      <LoaderCircle
+        aria-hidden="true"
+        className="h-7 w-7 animate-spin text-brand-600"
+      />
       <span className="sr-only">Yükleniyor</span>
     </div>
   )

@@ -1,20 +1,20 @@
+import { LoaderCircle } from 'lucide-react'
 import type { ButtonHTMLAttributes } from 'react'
-
-type ButtonVariant = 'primary' | 'secondary' | 'danger'
+import {
+  buttonClass,
+  type ButtonSize,
+  type ButtonVariant,
+} from '@/components/ui/buttonStyles'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant
+  size?: ButtonSize
   isLoading?: boolean
-}
-
-const VARIANT_CLASSES: Record<ButtonVariant, string> = {
-  primary: 'bg-orange-700 text-white hover:bg-orange-800',
-  secondary: 'border border-stone-300 bg-white text-stone-800 hover:bg-stone-100',
-  danger: 'bg-red-700 text-white hover:bg-red-800',
 }
 
 export function Button({
   variant = 'primary',
+  size = 'md',
   isLoading = false,
   type = 'button',
   className = '',
@@ -26,10 +26,14 @@ export function Button({
     <button
       type={type}
       disabled={disabled || isLoading}
-      className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${VARIANT_CLASSES[variant]} ${className}`}
+      aria-busy={isLoading}
+      className={buttonClass(variant, size, className)}
       {...props}
     >
-      {isLoading ? 'Lütfen bekleyin...' : children}
+      {isLoading && (
+        <LoaderCircle aria-hidden="true" className="h-4 w-4 animate-spin" />
+      )}
+      {children}
     </button>
   )
 }
