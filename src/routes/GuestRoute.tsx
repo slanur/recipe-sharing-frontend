@@ -1,5 +1,5 @@
-import { Navigate, Outlet } from 'react-router-dom'
-import { HOME_BY_ROLE } from '@/routes/paths'
+import { Navigate, Outlet, useLocation } from 'react-router-dom'
+import { getPostLoginPath } from '@/routes/paths'
 import {
   selectIsAuthenticated,
   selectRole,
@@ -9,9 +9,10 @@ import {
 export function GuestRoute() {
   const isAuthenticated = useAuthStore(selectIsAuthenticated)
   const role = useAuthStore(selectRole)
+  const location = useLocation()
 
   if (isAuthenticated) {
-    return <Navigate to={role ? HOME_BY_ROLE[role] : '/unauthorized'} replace />
+    return <Navigate to={getPostLoginPath(role, location.state?.from)} replace />
   }
   return <Outlet />
 }
