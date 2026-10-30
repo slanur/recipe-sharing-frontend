@@ -8,7 +8,10 @@ export function RecipeCreatePage() {
 
   async function handleSubmit(input: RecipeInput) {
     const recipe = await createRecipe(input)
-    navigate(`/recipe/${recipe.id}`, { replace: true })
+    navigate(`/user/recipes/${recipe.id}/edit`, {
+      replace: true,
+      state: { created: true },
+    })
   }
 
   return (
