@@ -1,6 +1,8 @@
 import { createBrowserRouter } from 'react-router-dom'
 import { PanelLayout } from '@/layouts/PanelLayout'
 import { PublicLayout } from '@/layouts/PublicLayout'
+import { AboutPage } from '@/pages/AboutPage'
+import { LandingPage } from '@/pages/LandingPage'
 import { LoginPage } from '@/pages/LoginPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import { PlaceholderPage } from '@/pages/PlaceholderPage'
@@ -14,8 +16,8 @@ export const router = createBrowserRouter([
   {
     element: <PublicLayout />,
     children: [
-      { path: '/', element: <PlaceholderPage title="Ana Sayfa" /> },
-      { path: '/about', element: <PlaceholderPage title="Hakkında" /> },
+      { path: '/', element: <LandingPage /> },
+      { path: '/about', element: <AboutPage /> },
       { path: '/unauthorized', element: <UnauthorizedPage /> },
       {
         element: <GuestRoute />,
