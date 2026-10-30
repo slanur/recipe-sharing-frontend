@@ -7,6 +7,7 @@ import { LoginPage } from '@/pages/LoginPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import { PlaceholderPage } from '@/pages/PlaceholderPage'
 import { RegisterPage } from '@/pages/RegisterPage'
+import { TagsPage } from '@/pages/TagsPage'
 import { UnauthorizedPage } from '@/pages/UnauthorizedPage'
 import { GuestRoute } from '@/routes/GuestRoute'
 import { PrivateRoute } from '@/routes/PrivateRoute'
@@ -65,7 +66,7 @@ export const router = createBrowserRouter([
               },
               {
                 path: '/org/tags',
-                element: <PlaceholderPage title="Tag Yönetimi" />,
+                element: <TagsPage />,
               },
             ],
           },
