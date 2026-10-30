@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { AuthTokens } from '@/types/auth'
-import { getRole } from '@/utils/jwt'
+import { getRole, getUserId } from '@/utils/jwt'
 
 interface AuthState {
   accessToken: string | null
@@ -28,3 +28,6 @@ export const selectIsAuthenticated = (state: AuthState) =>
 
 export const selectRole = (state: AuthState) =>
   state.accessToken ? getRole(state.accessToken) : null
+
+export const selectUserId = (state: AuthState) =>
+  state.accessToken ? getUserId(state.accessToken) : null
