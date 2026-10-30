@@ -17,3 +17,11 @@ export function getRole(accessToken: string): Role | null {
     return null
   }
 }
+
+export function getUserId(accessToken: string) {
+  try {
+    return jwtDecode<{ sub?: string }>(accessToken).sub ?? null
+  } catch {
+    return null
+  }
+}
