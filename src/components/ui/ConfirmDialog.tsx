@@ -1,3 +1,4 @@
+import { TriangleAlert } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/Button'
 
@@ -35,10 +36,17 @@ export function ConfirmDialog({
         event.preventDefault()
         onCancel()
       }}
-      className="m-auto w-[calc(100%-2rem)] max-w-sm rounded-2xl p-6 backdrop:bg-stone-950/50"
+      className="m-auto w-[calc(100%-2rem)] max-w-md rounded-3xl p-6 shadow-lift backdrop:bg-ink/50 backdrop:backdrop-blur-sm sm:p-7"
     >
-      <h2 className="text-lg font-semibold text-stone-950">{title}</h2>
-      <p className="mt-2 text-sm text-stone-600">{description}</p>
+      <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-50 text-red-700">
+        <TriangleAlert aria-hidden="true" className="h-5 w-5" />
+      </span>
+      <h2 className="mt-4 font-display text-xl font-semibold text-ink">
+        {title}
+      </h2>
+      <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">
+        {description}
+      </p>
       <div className="mt-6 flex justify-end gap-2">
         <Button variant="secondary" onClick={onCancel} disabled={isLoading}>
           Vazgeç

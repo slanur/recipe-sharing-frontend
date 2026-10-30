@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { Alert } from '@/components/ui/Alert'
 import { Button } from '@/components/ui/Button'
+import { buttonClass } from '@/components/ui/buttonStyles'
 import { Spinner } from '@/components/ui/Spinner'
 import { TextAreaField } from '@/components/ui/TextAreaField'
 import { TextField } from '@/components/ui/TextField'
@@ -89,61 +90,69 @@ export function RecipeForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="space-y-4">
+    <form onSubmit={handleSubmit} noValidate className="space-y-5">
       {formError && <Alert tone="error">{formError}</Alert>}
-      <TextField
-        label="Başlık"
-        value={title}
-        onChange={(event) => setTitle(event.target.value)}
-        error={fieldErrors.title}
-      />
-      <TextAreaField
-        label="Açıklama"
-        value={description}
-        onChange={(event) => setDescription(event.target.value)}
-        error={fieldErrors.description}
-      />
-      <TextField
-        label="Hazırlama süresi (dakika)"
-        type="number"
-        min={1}
-        inputMode="numeric"
-        value={prepTime}
-        onChange={(event) => setPrepTime(event.target.value)}
-        error={fieldErrors.prepTime}
-      />
-      <fieldset>
-        <legend className="text-sm font-medium text-stone-800">Kategori</legend>
-        {isLoading && <Spinner />}
-        {tagsError && <Alert tone="error">{tagsError}</Alert>}
-        <div className="mt-2 flex flex-wrap gap-2">
-          {tags.map((tag) => (
-            <label
-              key={tag.id}
-              className="flex cursor-pointer items-center gap-2 rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm text-stone-800 has-checked:border-orange-700 has-checked:bg-orange-50"
-            >
-              <input
-                type="checkbox"
-                checked={tagIds.includes(tag.id)}
-                onChange={() => toggleTag(tag.id)}
-                className="accent-orange-700"
-              />
-              {tag.name}
-            </label>
-          ))}
+      <div className="space-y-5 rounded-3xl bg-white p-5 shadow-card sm:p-7">
+        <TextField
+          label="Tarif başlığı"
+          placeholder="Örn. Annemin mercimek çorbası"
+          value={title}
+          onChange={(event) => setTitle(event.target.value)}
+          error={fieldErrors.title}
+        />
+        <TextAreaField
+          label="Açıklama ve yapılışı"
+          placeholder={
+            'İlk paragraf kısa tanıtım olarak görünür.\n\nSonraki her paragraf bir adım olur.'
+          }
+          value={description}
+          onChange={(event) => setDescription(event.target.value)}
+          error={fieldErrors.description}
+        />
+        <div className="max-w-xs">
+          <TextField
+            label="Hazırlama süresi (dakika)"
+            type="number"
+            min={1}
+            inputMode="numeric"
+            placeholder="30"
+            value={prepTime}
+            onChange={(event) => setPrepTime(event.target.value)}
+            error={fieldErrors.prepTime}
+          />
         </div>
-        {fieldErrors.tags && (
-          <p className="mt-1 text-sm text-red-700">{fieldErrors.tags}</p>
-        )}
-      </fieldset>
-      <div className="flex gap-2">
-        <Button type="submit" isLoading={isSubmitting}>
+        <fieldset>
+          <legend className="text-sm font-semibold text-ink">Kategori</legend>
+          {isLoading && <Spinner />}
+          {tagsError && <Alert tone="error">{tagsError}</Alert>}
+          <div className="mt-2 flex flex-wrap gap-2">
+            {tags.map((tag) => (
+              <label
+                key={tag.id}
+                className="cursor-pointer rounded-full border border-sand-300 bg-white px-4 py-2 text-sm font-semibold text-ink-soft transition-colors hover:border-ink-muted has-checked:border-brand-600 has-checked:bg-brand-50 has-checked:text-brand-700 has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-brand-600"
+              >
+                <input
+                  type="checkbox"
+                  checked={tagIds.includes(tag.id)}
+                  onChange={() => toggleTag(tag.id)}
+                  className="sr-only"
+                />
+                {tag.name}
+              </label>
+            ))}
+          </div>
+          {fieldErrors.tags && (
+            <p className="mt-1.5 text-sm font-medium text-red-700">
+              {fieldErrors.tags}
+            </p>
+          )}
+        </fieldset>
+      </div>
+      <div className="flex gap-2.5">
+        <Button type="submit" size="lg" isLoading={isSubmitting}>
           {submitLabel}
         </Button>
-        <Link
-          to={cancelTo}
-          className="rounded-lg border border-stone-300 bg-white px-4 py-2 text-sm font-medium text-stone-800 hover:bg-stone-100"
-        >
+        <Link to={cancelTo} className={buttonClass('ghost', 'lg')}>
           Vazgeç
         </Link>
       </div>

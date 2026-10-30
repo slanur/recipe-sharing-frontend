@@ -1,1 +1,75 @@
 @import 'tailwindcss';
+
+@theme {
+  --font-sans: 'DM Sans Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Fraunces Variable', ui-serif, Georgia, serif;
+
+  --color-paper: #faf6ef;
+  --color-sand-100: #f3ecdf;
+  --color-sand-200: #e8decd;
+  --color-sand-300: #d6c8b2;
+  --color-ink: #231a14;
+  --color-ink-soft: #5a4d43;
+  --color-ink-muted: #75675b;
+  --color-brand-50: #fdf1e9;
+  --color-brand-100: #fadfcf;
+  --color-brand-500: #c8501f;
+  --color-brand-600: #b2431a;
+  --color-brand-700: #8f3414;
+  --color-herb-100: #e4ecdf;
+  --color-herb-700: #2f4a36;
+  --color-herb-900: #1c2f22;
+  --color-saffron: #e3a327;
+
+  --shadow-card: 0 1px 2px rgb(35 26 20 / 0.04), 0 8px 24px -14px rgb(35 26 20 / 0.14);
+  --shadow-lift: 0 2px 4px rgb(35 26 20 / 0.05), 0 22px 40px -20px rgb(35 26 20 / 0.28);
+
+  --animate-rise: rise 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand-600);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    ::before,
+    ::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+.scrollbar-none {
+  scrollbar-width: none;
+}

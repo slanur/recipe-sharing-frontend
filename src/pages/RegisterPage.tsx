@@ -4,11 +4,17 @@ import { RegisterForm } from '@/features/auth/RegisterForm'
 
 export function RegisterPage() {
   return (
-    <AuthCard title="Kayıt Ol" description="Yeni bir hesap oluşturun.">
+    <AuthCard
+      title="Sofraya katıl"
+      description="Tariflerini paylaşmaya birkaç saniyede başla."
+    >
       <RegisterForm />
-      <p className="mt-4 text-center text-sm text-stone-600">
+      <p className="mt-6 text-center text-sm text-ink-soft">
         Zaten hesabınız var mı?{' '}
-        <Link to="/login" className="font-medium text-orange-700">
+        <Link
+          to="/login"
+          className="font-semibold text-brand-600 hover:text-brand-700"
+        >
           Giriş yapın
         </Link>
       </p>

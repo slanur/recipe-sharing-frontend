@@ -1,3 +1,4 @@
+import { Search } from 'lucide-react'
 import { useEffect, useRef, useState, type ChangeEvent } from 'react'
 import { SelectField } from '@/components/ui/SelectField'
 import { TextField } from '@/components/ui/TextField'
@@ -46,35 +47,51 @@ export function RecipeFilters({
     )
   }
 
+  const categories = [{ id: '', name: 'Tümü' }, ...tags]
+
   return (
-    <div className="grid gap-3 sm:grid-cols-3">
-      <TextField
-        label="Ara"
-        type="search"
-        placeholder="Tarif başlığı"
-        value={searchInput}
-        onChange={handleSearchChange}
-      />
-      <SelectField
-        label="Kategori"
-        value={tagId}
-        onChange={(event) => onTagChange(event.target.value)}
+    <div className="space-y-4">
+      <div className="grid gap-3 sm:grid-cols-[1fr_13rem]">
+        <TextField
+          label="Tarif ara"
+          hideLabel
+          type="search"
+          icon={Search}
+          placeholder="Tarif başlığında ara"
+          value={searchInput}
+          onChange={handleSearchChange}
+        />
+        <SelectField
+          label="Sıralama"
+          hideLabel
+          value={sort}
+          onChange={(event) => onSortChange(event.target.value as RecipeSort)}
+        >
+          <option value="newest">En yeniler</option>
+          <option value="oldest">En eskiler</option>
+        </SelectField>
+      </div>
+      <div
+        role="group"
+        aria-label="Kategori"
+        className="scrollbar-none -mx-4 flex gap-2 overflow-x-auto px-4 sm:mx-0 sm:flex-wrap sm:px-0"
       >
-        <option value="">Tüm kategoriler</option>
-        {tags.map((tag) => (
-          <option key={tag.id} value={tag.id}>
-            {tag.name}
-          </option>
-        ))}
-      </SelectField>
-      <SelectField
-        label="Sıralama"
-        value={sort}
-        onChange={(event) => onSortChange(event.target.value as RecipeSort)}
-      >
-        <option value="newest">Yeniden eskiye</option>
-        <option value="oldest">Eskiden yeniye</option>
-      </SelectField>
+        {categories.map((category) => {
+          const isActive = category.id === tagId
+
+          return (
+            <button
+              key={category.id}
+              type="button"
+              aria-pressed={isActive}
+              onClick={() => onTagChange(category.id)}
+              className={`h-9 shrink-0 rounded-full px-4 text-sm font-semibold transition-colors ${isActive ? 'bg-ink text-paper' : 'bg-white text-ink-soft shadow-sm hover:text-ink'}`}
+            >
+              {category.name}
+            </button>
+          )
+        })}
+      </div>
     </div>
   )
 }

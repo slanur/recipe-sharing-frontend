@@ -1,4 +1,5 @@
 import type { ApiItem, ApiOrganization, ApiTag } from '@/types/api'
+import { photoUrl } from '@/utils/photos'
 
 export interface MockUser {
   id: string
@@ -21,32 +22,139 @@ interface MockDb {
   refreshTokens: Record<string, string>
 }
 
-const STORAGE_KEY = 'mock-db'
+const STORAGE_KEY = 'mock-db-v2'
 const ORGANIZATION_ID = 'org-lezzet'
 const DEMO_PASSWORD = 'demo1234'
 
-const COLORS = ['#b45309', '#be123c', '#4d7c0f', '#0f766e', '#7c2d12', '#a16207']
-
-function createImage(label: string, color: string) {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><rect width="400" height="300" fill="${color}"/><text x="200" y="160" text-anchor="middle" font-size="26" font-family="sans-serif" fill="#fff">${label}</text></svg>`
-  return `data:image/svg+xml,${encodeURIComponent(svg)}`
+interface SeedRecipe {
+  name: string
+  description: string
+  minutes: number
+  tagId: string
+  photos: string[]
 }
 
-const SEED_RECIPES: [string, string, number, string][] = [
-  ['Mercimek Çorbası', 'Limon ve kırmızı biberle servis edilen klasik çorba.', 35, 'tag-corba'],
-  ['Ezogelin Çorbası', 'Bulgur ve pirinçle hazırlanan doyurucu bir çorba.', 40, 'tag-corba'],
-  ['Domates Çorbası', 'Kaşar peyniriyle servis edilen kremalı çorba.', 30, 'tag-corba'],
-  ['Karnıyarık', 'Kıymalı harçla doldurulmuş fırında patlıcan.', 70, 'tag-ana-yemek'],
-  ['Mantı', 'Yoğurt ve tereyağlı sosla servis edilen ev mantısı.', 120, 'tag-ana-yemek'],
-  ['Tavuk Sote', 'Sebzelerle sotelenmiş yumuşak tavuk parçaları.', 35, 'tag-ana-yemek'],
-  ['Zeytinyağlı Yaprak Sarma', 'Limonlu ve baharatlı pirinç iç harcıyla.', 90, 'tag-ana-yemek'],
-  ['Fırın Sütlaç', 'Üzeri fırınlanmış geleneksel sütlü tatlı.', 60, 'tag-tatli'],
-  ['Revani', 'Şerbetli, irmikli yumuşak kek.', 55, 'tag-tatli'],
-  ['Kazandibi', 'Tabanı karamelize edilmiş muhallebi.', 80, 'tag-tatli'],
-  ['Çoban Salata', 'Domates, salatalık ve biberle hafif bir salata.', 15, 'tag-salata'],
-  ['Gavurdağı Salatası', 'Cevizli ve nar ekşili bol malzemeli salata.', 20, 'tag-salata'],
-  ['Kısır', 'İnce bulgur ve taze yeşilliklerle hazırlanır.', 25, 'tag-salata'],
-  ['Kuru Fasulye', 'Pilavla servis edilen geleneksel ana yemek.', 100, 'tag-ana-yemek'],
+const SEED_RECIPES: SeedRecipe[] = [
+  {
+    name: 'Mercimek Çorbası',
+    description:
+      'Limon ve pul biberle servis edilen, her sofranın klasiği.\n\nSoğanı ve havucu tereyağında kavurun. Yıkanmış kırmızı mercimeği ve sıcak suyu ekleyip mercimekler yumuşayana kadar pişirin.\n\nBlenderdan geçirin, tuzunu ayarlayın. Üzerine kızdırılmış pul biberli tereyağı gezdirip limonla servis edin.',
+    minutes: 35,
+    tagId: 'tag-corba',
+    photos: ['photo-1530734575165-ce39d996fbaa', 'photo-1781332152758-8cb1d61f2192'],
+  },
+  {
+    name: 'Ezogelin Çorbası',
+    description:
+      'Bulgur ve pirinçle hazırlanan, nane kokulu doyurucu bir çorba.\n\nSoğanı salçayla kavurun. Mercimek, bulgur ve pirinci ekleyip sıcak suyla kaynatın.\n\nTaneler yumuşayınca kuru nane ve pul biberle tatlandırın, sıcak servis edin.',
+    minutes: 40,
+    tagId: 'tag-corba',
+    photos: ['photo-1781332152758-8cb1d61f2192'],
+  },
+  {
+    name: 'Zencefilli Havuç Çorbası',
+    description:
+      'Kadifemsi dokusu ve hafif acısıyla kış günlerinin favorisi.\n\nHavuç ve soğanı zeytinyağında çevirin, rendelenmiş zencefil ekleyin.\n\nSebze suyuyla pişirip blenderdan geçirin. Taze maydanozla servis edin.',
+    minutes: 30,
+    tagId: 'tag-corba',
+    photos: ['photo-1642497394078-4794e837019c'],
+  },
+  {
+    name: 'Karnıyarık',
+    description:
+      'Kıymalı harçla doldurulmuş, fırında kızarmış patlıcanlar.\n\nPatlıcanları alacalı soyup kızartın. Kıymayı soğan, biber ve domatesle kavurun.\n\nPatlıcanların ortasını açıp harcı doldurun, üzerine domates dilimi koyup fırında pişirin.',
+    minutes: 70,
+    tagId: 'tag-ana-yemek',
+    photos: ['photo-1782878906030-a1c4b89aefab'],
+  },
+  {
+    name: 'Ev Mantısı',
+    description:
+      'Sarımsaklı yoğurt ve tereyağlı sosla servis edilen ince hamurlu mantı.\n\nHamuru açıp küçük kareler kesin, kıymalı iç harcı koyup kapatın.\n\nTuzlu suda haşlayın. Üzerine sarımsaklı yoğurt ve pul biberli tereyağı dökün.',
+    minutes: 120,
+    tagId: 'tag-ana-yemek',
+    photos: ['photo-1719454260936-caa0a804f154'],
+  },
+  {
+    name: 'Fırında Tavuk ve Patates',
+    description:
+      'Baharatlı tavuk ve altın renkli patateslerle pratik bir akşam yemeği.\n\nTavukları yoğurt, salça ve baharatlarla marine edin.\n\nPatateslerle birlikte tepsiye dizip önceden ısıtılmış fırında kızarana kadar pişirin.',
+    minutes: 55,
+    tagId: 'tag-ana-yemek',
+    photos: ['photo-1705088295364-6e98d62a3146'],
+  },
+  {
+    name: 'Fırında Patlıcan Dilimleri',
+    description:
+      'Domates ve otlarla fırınlanmış hafif bir sebze yemeği.\n\nPatlıcanları dilimleyip tuzlayın, zeytinyağı sürün.\n\nDomates ve sarımsakla birlikte fırınlayın, taze otlarla servis edin.',
+    minutes: 45,
+    tagId: 'tag-ana-yemek',
+    photos: ['photo-1740077975984-f2670ed698d9'],
+  },
+  {
+    name: 'Fırın Sütlaç',
+    description:
+      'Üzeri nar gibi kızarmış, geleneksel sütlü tatlı.\n\nPirinci haşlayın, süt ve şekeri ekleyip kaynatın. Nişastayla kıvam verin.\n\nKaselere paylaştırıp ızgarada üzeri kızarana kadar fırınlayın.',
+    minutes: 60,
+    tagId: 'tag-tatli',
+    photos: ['photo-1606728099646-68d5a0a4d423'],
+  },
+  {
+    name: 'Fıstıklı Baklava',
+    description:
+      'İncecik yufka katları ve bol Antep fıstığıyla bayram sofralarının yıldızı.\n\nYufkaları tereyağıyla katlayıp araya fıstık serpin.\n\nFırında kızartın, ılık şerbeti dökün ve dinlendirip servis edin.',
+    minutes: 90,
+    tagId: 'tag-tatli',
+    photos: ['photo-1617806501553-d3a6a3a7b227'],
+  },
+  {
+    name: 'Şöbiyet',
+    description:
+      'Kaymak ve fıstıkla doldurulmuş, şerbetli hamur tatlısı.\n\nYufkaları üçgen şeklinde katlayıp iç harcı yerleştirin.\n\nFırınlayın, şerbetini dökün ve üzerine fıstık serpin.',
+    minutes: 80,
+    tagId: 'tag-tatli',
+    photos: ['photo-1598110750624-207050c4f28c'],
+  },
+  {
+    name: 'Fıstıklı Tel Kadayıf',
+    description:
+      'Çıtır kadayıf, altın renkli tereyağı ve bol fıstık.\n\nKadayıfı tereyağıyla harmanlayıp tepsiye bastırın.\n\nKızarana kadar fırınlayın, şerbetini gezdirip fıstıkla süsleyin.',
+    minutes: 50,
+    tagId: 'tag-tatli',
+    photos: ['photo-1778448563279-e7b39093933c'],
+  },
+  {
+    name: 'Çoban Salata',
+    description:
+      'Domates, salatalık ve biberle hazırlanan ferah bir eşlikçi.\n\nSebzeleri küçük küpler halinde doğrayın.\n\nZeytinyağı, limon ve tuzla harmanlayıp hemen servis edin.',
+    minutes: 15,
+    tagId: 'tag-salata',
+    photos: ['photo-1654216548994-eefcba14db5c'],
+  },
+  {
+    name: 'Gavurdağı Salatası',
+    description:
+      'Cevizli ve nar ekşili, bol malzemeli Antep lezzeti.\n\nDomates, soğan ve maydanozu ince ince doğrayın.\n\nCeviz, sumak, nar ekşisi ve zeytinyağıyla karıştırın.',
+    minutes: 20,
+    tagId: 'tag-salata',
+    photos: ['photo-1641898378768-9b40ddcf2815'],
+  },
+  {
+    name: 'Domatesli Yaz Salatası',
+    description:
+      'Mevsim domatesleri ve taze otlarla sade bir başlangıç.\n\nDomatesleri iri doğrayıp tuzlayın.\n\nZeytinyağı, sirke ve taze otlarla harmanlayıp servis edin.',
+    minutes: 10,
+    tagId: 'tag-salata',
+    photos: ['photo-1719196339826-c66c13ad5b86'],
+  },
+  {
+    name: 'Sebzeli Et Güveci',
+    description:
+      'Ağır ateşte pişen, kokusu mutfağı saran doyurucu bir tencere yemeği.\n\nEti mühürleyin, soğan ve salçayla kavurun.\n\nSebzeleri ekleyip kısık ateşte et yumuşayana kadar pişirin.',
+    minutes: 100,
+    tagId: 'tag-ana-yemek',
+    photos: ['photo-1591386767153-987783380885'],
+  },
 ]
 
 function seed(): MockDb {
@@ -83,20 +191,18 @@ function seed(): MockDb {
       },
     ],
     tags,
-    items: SEED_RECIPES.map(([name, description, value, tagId], index) => ({
+    items: SEED_RECIPES.map((recipe, index) => ({
       id: `recipe-${index + 1}`,
-      name,
-      description,
-      value,
+      name: recipe.name,
+      description: recipe.description,
+      value: recipe.minutes,
       tags: tags
-        .filter((tag) => tag.id === tagId)
+        .filter((tag) => tag.id === recipe.tagId)
         .map(({ id, name }) => ({ id, name })),
-      photos: [
-        {
-          id: `photo-${index + 1}`,
-          url: createImage(name, COLORS[index % COLORS.length]),
-        },
-      ],
+      photos: recipe.photos.map((photo, photoIndex) => ({
+        id: `photo-${index + 1}-${photoIndex + 1}`,
+        url: photoUrl(photo, 1000),
+      })),
       ownerId: index % 2 === 0 ? 'user-demo' : 'user-other',
       organizationId: ORGANIZATION_ID,
       createdAt: new Date(Date.UTC(2026, 0, index + 1)).toISOString(),

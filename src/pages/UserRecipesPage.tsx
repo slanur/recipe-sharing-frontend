@@ -1,6 +1,11 @@
+import { Plus } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { buttonClass } from '@/components/ui/buttonStyles'
+import { PageHeader } from '@/components/ui/PageHeader'
+import { RecipeCard } from '@/features/recipes/RecipeCard'
+import { RecipeCardSkeleton } from '@/features/recipes/RecipeCardSkeleton'
 import { RecipeFilters } from '@/features/recipes/RecipeFilters'
-import { RecipeGrid } from '@/features/recipes/RecipeGrid'
+import { RecipeResults } from '@/features/recipes/RecipeResults'
 import {
   RECIPES_PER_PAGE,
   useRecipeFilters,
@@ -21,16 +26,20 @@ export function UserRecipesPage() {
   })
 
   return (
-    <section className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl font-semibold text-stone-950">Tarifler</h1>
-        <Link
-          to="/user/recipes/new"
-          className="rounded-lg bg-orange-700 px-4 py-2 text-sm font-medium text-white hover:bg-orange-800"
-        >
-          Yeni Tarif
-        </Link>
-      </div>
+    <section className="space-y-7">
+      <PageHeader
+        title="Keşfet"
+        description="Bugün sofraya ne koyacağını birlikte bulalım."
+        action={
+          <Link
+            to="/user/recipes/new"
+            className={buttonClass('primary', 'md', 'max-lg:hidden')}
+          >
+            <Plus aria-hidden="true" className="h-4.5 w-4.5" />
+            Yeni Tarif
+          </Link>
+        }
+      />
       <RecipeFilters
         search={search}
         tagId={tagId}
@@ -40,7 +49,7 @@ export function UserRecipesPage() {
         onTagChange={filters.setTagId}
         onSortChange={filters.setSort}
       />
-      <RecipeGrid
+      <RecipeResults
         recipes={recipes}
         page={page}
         totalPages={totalPages}
@@ -48,9 +57,18 @@ export function UserRecipesPage() {
         error={error}
         emptyTitle="Tarif bulunamadı"
         emptyDescription="Aramanızı veya filtrelerinizi değiştirmeyi deneyin."
+        skeleton={<RecipeCardSkeleton />}
         onRetry={reload}
         onPageChange={filters.setPage}
-      />
+      >
+        <ul className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+          {recipes.map((recipe) => (
+            <li key={recipe.id} className="animate-rise">
+              <RecipeCard recipe={recipe} />
+            </li>
+          ))}
+        </ul>
+      </RecipeResults>
     </section>
   )
 }
