@@ -6,6 +6,7 @@ Kullanıcıların tarif paylaşıp keşfettiği, Organization ve User olmak üze
 
 - React ve TypeScript
 - Vite
+- React Router
 - Tailwind CSS
 - Axios
 - Zustand
