@@ -6,7 +6,9 @@ import { LandingPage } from '@/pages/LandingPage'
 import { LoginPage } from '@/pages/LoginPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import { OrgRecipesPage } from '@/pages/OrgRecipesPage'
-import { PlaceholderPage } from '@/pages/PlaceholderPage'
+import { RecipeCreatePage } from '@/pages/RecipeCreatePage'
+import { RecipeDetailPage } from '@/pages/RecipeDetailPage'
+import { RecipeEditPage } from '@/pages/RecipeEditPage'
 import { RegisterPage } from '@/pages/RegisterPage'
 import { TagsPage } from '@/pages/TagsPage'
 import { UnauthorizedPage } from '@/pages/UnauthorizedPage'
@@ -38,38 +40,20 @@ export const router = createBrowserRouter([
       {
         element: <PanelLayout />,
         children: [
-          {
-            path: '/recipe/:id',
-            element: <PlaceholderPage title="Tarif Detayı" />,
-          },
+          { path: '/recipe/:id', element: <RecipeDetailPage /> },
           {
             element: <RoleRoute allowedRoles={['User']} />,
             children: [
-              {
-                path: '/user/recipes',
-                element: <UserRecipesPage />,
-              },
-              {
-                path: '/user/recipes/new',
-                element: <PlaceholderPage title="Yeni Tarif" />,
-              },
-              {
-                path: '/user/recipes/:id/edit',
-                element: <PlaceholderPage title="Tarifi Düzenle" />,
-              },
+              { path: '/user/recipes', element: <UserRecipesPage /> },
+              { path: '/user/recipes/new', element: <RecipeCreatePage /> },
+              { path: '/user/recipes/:id/edit', element: <RecipeEditPage /> },
             ],
           },
           {
             element: <RoleRoute allowedRoles={['Organization']} />,
             children: [
-              {
-                path: '/org/recipes',
-                element: <OrgRecipesPage />,
-              },
-              {
-                path: '/org/tags',
-                element: <TagsPage />,
-              },
+              { path: '/org/recipes', element: <OrgRecipesPage /> },
+              { path: '/org/tags', element: <TagsPage /> },
             ],
           },
         ],
